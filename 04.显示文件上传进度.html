@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/bootstrap.css">
+    <script src="./js/jquery.js"></script>
+</head>
+
+<body>
+    <form>
+        <input type="file" name="avatar">
+        <input type="submit" value="上传按钮" id="btn">
+    </form>
+    <!-- <hr> -->
+    <!-- 进度条 -->
+    <div class="progress" style="width: 500px; margin: 10px 0;">
+        <div class="progress-bar progress-bar-info progress-bar-striped active" id="percent" style="width: 0%">
+                0%
+        </div>
+    </div>
+    <img src="" alt="" id="img" width="800"  />
+
+    <script>
+        console.log($)
+        $('form').on('submit', function (e) {
+            // 阻止 表单 默认事件
+            e.preventDefault()
+
+            // 获取 表单 元素
+            // var form = $('form')[0];
+            var fd = new FormData(this);
+
+            // 发送 ajax 请求
+            var xhr = new XMLHttpRequest();
+            // console.log(xhr);
+            xhr.upload.onprogress = function (e) {
+                console.log(e);
+                if (e.lengthComputable) {
+                    var currentValue = Math.floor((e.loaded / e.total) * 100);
+                    // console.log(currentValue)
+                    $('#percent').html(100);
+                    // 获取 不到 元素
+                    console.log($('#percent'));
+                    $('#percent').attr('style', 'width:' + currentValue + '%');
+                }
+            }
+            xhr.open('POST', 'http://www.liulongbin.top:3006/api/upload/avatar');
+            xhr.send(fd);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var res = JSON.parse(xhr.responseText);
+                    // console.log(res)
+                }
+            }
+        })
+    </script>
+
+</body>
+
+</html>
